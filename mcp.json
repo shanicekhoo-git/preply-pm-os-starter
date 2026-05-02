@@ -14,7 +14,7 @@
     },
     "dovetail": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://dovetail.com/api/mcp"]
+      "args": ["-y", "mcp-remote", "https://dovetail.com/mcp"]
     },
     "figma": {
       "type": "http",

@@ -40,8 +40,8 @@ Let Claude Code do the work — clone this repo and ask Claude to set everything
 
 2. **Clone this repo** to your machine:
    ```bash
-   git clone <repo-url> ~/preply-pm-os
-   cd ~/preply-pm-os/ai-enablement
+   git clone https://github.com/shanicekhoo-git/preply-pm-os-starter.git ~/preply-pm-os
+   cd ~/preply-pm-os
    ```
 
 3. **Launch Claude Code** from this folder:
