@@ -44,6 +44,10 @@ Follow Claude's instructions. It might take some back and forth — that's part 
 Once Claude finishes, open `~/.claude.json` in your editor or Finder to confirm the servers are there.
 
 > 💡 **What's `~/.claude.json`?** It's the **global config file** Claude Code reads every time it starts. The leading `.` makes it a *hidden file* on macOS — Finder won't show it by default. To toggle hidden files in Finder, press **`Cmd + Shift + .`**. The dot is just a Unix convention for hiding files; nothing Claude-specific. This single file is what makes your MCPs available in every Claude Code session, on every project, everywhere on your machine.
+>
+<img width="2094" height="1480" alt="image" src="https://github.com/user-attachments/assets/c1f05132-cfc3-4e42-89f6-0546fdac5e07" />
+
+
 
 Inside, look for an `mcpServers` block with these six entries:
 
