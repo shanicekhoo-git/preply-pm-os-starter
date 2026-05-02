@@ -12,10 +12,6 @@
       "type": "http",
       "url": "https://mcp.datadoghq.com/api/unstable/mcp-server/mcp"
     },
-    "dovetail": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://dovetail.com/mcp"]
-    },
     "figma": {
       "type": "http",
       "url": "https://mcp.figma.com/mcp"
@@ -27,10 +23,6 @@
     "granola": {
       "type": "http",
       "url": "https://mcp.granola.ai/mcp"
-    },
-    "slack": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://mcp.slack.com/mcp"]
     }
   }
 }
