@@ -41,22 +41,48 @@ Follow Claude's instructions. It might take some back and forth — that's part 
 
 ### Verify it worked — and what `~/.claude.json` actually is
 
-Once Claude finishes, open `~/.claude.json` in your editor or Finder to confirm the servers are there.
+Once Claude finishes, open `~/.claude.json` to confirm the servers are there.
 
-> 💡 **What's `~/.claude.json`?** It's the **global config file** Claude Code reads every time it starts. The leading `.` makes it a *hidden file* on macOS — Finder won't show it by default. To toggle hidden files in Finder, press **`Cmd + Shift + .`**. The dot is just a Unix convention for hiding files; nothing Claude-specific. This single file is what makes your MCPs available in every Claude Code session, on every project, everywhere on your machine.
+> 💡 **What's `~/.claude.json`?** It's the **global config file** Claude Code reads every time it starts. The leading `.` makes it a *hidden file* on macOS — Finder won't show it by default. The dot is just a Unix convention for hiding files; nothing Claude-specific. This single file is what makes your MCPs available in every Claude Code session, on every project, everywhere on your machine.
 
-Inside, look for an `mcpServers` block with these six entries:
+#### How to find `~/.claude.json` on Mac
 
-```json
-"mcpServers": {
-  "amplitude": { ... },
-  "atlassian": { ... },
-  "datadog": { ... },
-  "figma": { ... },
-  "gosset": { ... },
-  "granola": { ... }
-}
-```
+1. **Open Finder.**
+
+2. **Go to your home folder.** In the Finder sidebar, click the entry with the house icon and your Mac username (e.g., `shanice.khoo`). Or use the keyboard shortcut **`Cmd + Shift + H`**.
+
+   *[screenshot: Finder sidebar with home folder highlighted]*
+
+3. **Show hidden files.** Press **`Cmd + Shift + .`** (Cmd, Shift, and the period key together). All the hidden files — anything starting with `.` — will pop into view, slightly greyed out. Press the same shortcut again any time to hide them.
+
+4. **Find `.claude.json`.** Scroll through your home folder until you spot it. Be careful — there are a few similarly-named items, only one of them is the right one:
+
+   | Name | What it is | Open this? |
+   |---|---|---|
+   | `.claude.json` | ✅ The config file you want | **Yes** |
+   | `.claude` | A folder where Claude Code stores sessions, plugins, etc. | No |
+   | `.claude.json.backup` / `.claude.json.bak` | Auto-generated backups | No |
+
+   *[screenshot: home folder with `.claude.json` highlighted]*
+
+5. **Open it.** Right-click `.claude.json` → **Open With** → pick a text editor:
+   - **TextEdit** — built-in on every Mac
+   - **VS Code** or **Cursor** — if you have either installed
+
+   (Right-click → Open With is more reliable than double-click — macOS sometimes picks a weird default app for `.json` files.)
+
+6. **Look for the `mcpServers` block** near the top. You should see these six entries:
+
+   ```json
+   "mcpServers": {
+     "amplitude": { ... },
+     "atlassian": { ... },
+     "datadog": { ... },
+     "figma": { ... },
+     "gosset": { ... },
+     "granola": { ... }
+   }
+   ```
 
 If you see them, you're good. If something looks off, ask Claude to fix it directly — *"my `~/.claude.json` is missing X, can you add it?"*
 
