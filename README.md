@@ -23,7 +23,7 @@ Time required: **~30 minutes**. You'll do most of this by asking Claude to set t
 
 Paste this prompt into Claude Code:
 
-> Look at this repo: https://github.com/shanicekhoo-git/preply-pm-os-starter — can you download the `mcp.json` file into my `.claude` settings and walk me through connecting to all the MCPs in it?
+> Look at this repo: https://github.com/shanicekhoo-git/preply-pm-os-starter — read the `mcp.json` file in it and add those servers to my `~/.claude.json` config file. Don't overwrite any servers I already have — only add the new ones. Then walk me through authenticating each one.
 
 Follow Claude's instructions. It might take some back and forth — that's part of the fun of working with AI :)
 
@@ -38,6 +38,27 @@ Follow Claude's instructions. It might take some back and forth — that's part 
 ### A few setup notes Claude will (probably) walk you through
 
 **Gosset.** Connect to Preply VPN first — this MCP only resolves on the internal network. First use prompts for browser auth.
+
+### Verify it worked — and what `~/.claude.json` actually is
+
+Once Claude finishes, open `~/.claude.json` in your editor or Finder to confirm the servers are there.
+
+> 💡 **What's `~/.claude.json`?** It's the **global config file** Claude Code reads every time it starts. The leading `.` makes it a *hidden file* on macOS — Finder won't show it by default. To toggle hidden files in Finder, press **`Cmd + Shift + .`**. The dot is just a Unix convention for hiding files; nothing Claude-specific. This single file is what makes your MCPs available in every Claude Code session, on every project, everywhere on your machine.
+
+Inside, look for an `mcpServers` block with these six entries:
+
+```json
+"mcpServers": {
+  "amplitude": { ... },
+  "atlassian": { ... },
+  "datadog": { ... },
+  "figma": { ... },
+  "gosset": { ... },
+  "granola": { ... }
+}
+```
+
+If you see them, you're good. If something looks off, ask Claude to fix it directly — *"my `~/.claude.json` is missing X, can you add it?"*
 
 ---
 
