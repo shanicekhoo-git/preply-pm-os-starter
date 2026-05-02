@@ -27,7 +27,7 @@ The recommendation for Preply PMs is **Claude Code** because it gives you slash 
 You'll need:
 - **Claude Code installed** — [install guide](https://docs.claude.com/en/docs/claude-code/quickstart)
 - **VPN connected** — required for Gosset
-- **A GitHub Personal Access Token** — required for the GitHub MCP ([generate one here](https://github.com/settings/personal-access-tokens), fine-grained, read access to your own repos)
+- **`gh` CLI installed and authenticated** — used for GitHub access (commits, PRs, issues, repo browsing — see CLI tools section). If you don't have it: `brew install gh && gh auth login`
 - **For Google Workspace access**: see "Google Workspace (CLI, not MCP)" section below — uses Preply's `gws` CLI tool, requires IT Helpdesk to grant credentials if you're not in `dev@` or `data@` groups
 
 ---
@@ -51,17 +51,15 @@ Let Claude Code do the work — clone this repo and ask Claude to set everything
 
 4. **Paste this prompt** to Claude:
 
-   > Read `mcp.json` in this folder. Back up `~/.claude.json` to `~/.claude.json.bak`, then merge the `mcpServers` block into `~/.claude.json` while preserving all other fields. After saving, tell me what env vars I need to set (and the exact commands), then instruct me to `/quit` and restart. After I restart, walk me through authenticating each MCP one by one — tell me what to expect (browser flow, VPN, plan tier, etc.) and wait for me to confirm each is working before moving to the next.
+   > Read `mcp.json` in this folder. Merge its `mcpServers` block into `~/.claude.json` — but only add servers I don't already have (never overwrite existing entries). Preserve all other fields in the file. After saving, tell me what env vars I need to set (with exact commands), then instruct me to `/quit` and restart. After I restart, walk me through authenticating each new MCP one by one — tell me what to expect (browser flow, VPN, etc.) and wait for me to confirm each is working before moving on.
 
 5. **Follow Claude's instructions.** It will:
-   - Edit `~/.claude.json` for you (with backup)
+   - Edit `~/.claude.json` for you (additive — won't touch your existing servers)
    - Tell you which env vars to set (e.g. `GITHUB_PAT`)
    - Ask you to `/quit` and restart so the new servers load
-   - After restart, walk you through authenticating each of the 9 MCPs
+   - After restart, walk you through authenticating each new MCP
 
 > ⚠️ **Why `/quit` immediately after the edit**: Claude Code writes its own state to `~/.claude.json` during a session, which can clobber Claude's edit if you keep using the same session. Quit and restart cleanly to lock in the change.
-
-> ⚠️ **If Claude Code won't start after the edit**: your JSON has a syntax error. Restore the backup: `cp ~/.claude.json.bak ~/.claude.json` and re-run the prompt above.
 
 ---
 
@@ -91,8 +89,7 @@ You'll see something like:
 **Order I'd suggest** (least to most fiddly):
 1. `atlassian`, `slack`, `figma`, `amplitude`, `granola`, `dovetail` — pure OAuth, click-through
 2. `datadog` — OAuth, check region (US vs EU)
-3. `github` — needs `GITHUB_PAT` env var set first (see below)
-4. `gosset` — needs VPN connected first
+3. `gosset` — needs VPN connected first
 
 Re-run `/mcp` at any time to check what's still pending.
 
@@ -110,26 +107,15 @@ Re-run `/mcp` at any time to check what's still pending.
 | `datadog` | Query logs, metrics, dashboards | OAuth |
 | `granola` | Pull meeting transcripts and summaries | OAuth |
 | `dovetail` | Query user research insights | OAuth |
-| `github` | Manage your personal repos | PAT (env var) |
 
 **Not in this file** (use CLIs instead — see "CLI tools" section):
 - **Snowflake** — query the data warehouse
 - **Google Workspace** — Drive, Gmail, Calendar, Sheets, Docs, Chat
+- **GitHub** — repos, PRs, issues, gists
 
 ---
 
 ## Setup details for the trickier ones
-
-### GitHub
-The GitHub MCP needs a Personal Access Token. The remote OAuth flow isn't supported in Claude Code yet.
-
-1. Go to [GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens](https://github.com/settings/personal-access-tokens)
-2. Generate a token with **read access to your own repositories**
-3. Add to your shell config:
-   ```bash
-   export GITHUB_PAT=ghp_xxxxx
-   ```
-4. Restart your terminal so the env var loads
 
 ### Gosset
 1. Connect to Preply VPN (required — this MCP only resolves on the internal network)
@@ -147,7 +133,7 @@ Default URLs in this config point to **US tenant**. If your Preply account is on
 
 ## CLI tools (separate setup, not MCPs)
 
-Two of the most-used tools are set up via CLI instead of MCP: **Snowflake** and **Google Workspace**. Same principle in both cases — CLIs let Claude run commands, write/read files, and iterate naturally instead of dumping everything into the context window. Faster, cheaper, more reliable on big results.
+Three of the most-used tools are set up via CLI instead of MCP: **Snowflake**, **Google Workspace**, and **GitHub**. Same principle in all three — CLIs let Claude run commands, write/read files, and iterate naturally instead of dumping everything into the context window. Faster, cheaper, more reliable on big results.
 
 ### Snowflake
 
@@ -189,6 +175,19 @@ Preply uses the official Google Workspace CLI (`gws`) for Drive, Gmail, Calendar
 
 Once setup is done, ask Claude things like *"check my calendar for tomorrow"* or *"find the latest version of the SEM strategy doc in Drive"* — it'll use `gws` directly.
 
+### GitHub
+
+Use the official `gh` CLI for repos, PRs, issues, and gists.
+
+```bash
+brew install gh
+gh auth login   # follow the browser flow
+```
+
+Verify with `gh auth status`. Once authenticated, ask Claude things like *"create an issue in shanicekhoo-git/preply-pm-os-starter"* or *"show me my open PRs"* — it'll use `gh` directly.
+
+No env vars needed — `gh` handles auth via keychain.
+
 ---
 
 ## Verify it works
@@ -211,10 +210,9 @@ Claude will prompt to authenticate the relevant MCP on first use. If a server is
 
 | Symptom | Likely fix |
 |---|---|
-| `MCP server "github" failed to start` | Check `echo $GITHUB_PAT` returns your token. Restart terminal if not. |
+| `gh: command not found` | `brew install gh && gh auth login` |
 | Gosset returns connection refused | VPN not connected |
 | `gws` says "permission denied" or "no credentials" | You may not be in `dev@` or `data@` groups — ping IT Helpdesk for credentials |
 | MCP is missing from `/mcp` list | Check the `mcpServers` block in `~/.claude.json` includes that server (typo? missing entry?) |
-| Claude Code won't start after editing config | JSON syntax error — restore backup: `cp ~/.claude.json.bak ~/.claude.json` |
 
 Still stuck? Drop into the AI enablement office hours or post in the channel.

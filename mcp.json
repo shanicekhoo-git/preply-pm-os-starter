@@ -20,13 +20,6 @@
       "type": "http",
       "url": "https://mcp.figma.com/mcp"
     },
-    "github": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer ${GITHUB_PAT}"
-      }
-    },
     "gosset": {
       "command": "npx",
       "args": ["-y", "mcp-remote", "https://gosset.preply.org/mcp/"]
