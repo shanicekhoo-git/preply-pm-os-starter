@@ -29,8 +29,8 @@
       "url": "https://mcp.granola.ai/mcp"
     },
     "slack": {
-      "type": "http",
-      "url": "https://mcp.slack.com/mcp"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.slack.com/mcp"]
     }
   }
 }

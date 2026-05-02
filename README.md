@@ -214,5 +214,6 @@ Claude will prompt to authenticate the relevant MCP on first use. If a server is
 | Gosset returns connection refused | VPN not connected |
 | `gws` says "permission denied" or "no credentials" | You may not be in `dev@` or `data@` groups — ping IT Helpdesk for credentials |
 | MCP is missing from `/mcp` list | Check the `mcpServers` block in `~/.claude.json` includes that server (typo? missing entry?) |
+| Auth fails with `does not support dynamic client registration` | The MCP server's OAuth doesn't match Claude Code's built-in flow. Wrap the URL in `mcp-remote` instead (same pattern as `gosset` in this config): change the entry from `"type": "http", "url": "..."` to `"command": "npx", "args": ["-y", "mcp-remote", "..."]` |
 
 Still stuck? Drop into the AI enablement office hours or post in the channel.
