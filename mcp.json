@@ -13,8 +13,8 @@
       "url": "https://mcp.datadoghq.com/api/unstable/mcp-server/mcp"
     },
     "dovetail": {
-      "type": "http",
-      "url": "https://dovetail.com/api/mcp"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://dovetail.com/api/mcp"]
     },
     "figma": {
       "type": "http",
