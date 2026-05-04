@@ -12,6 +12,13 @@
       "type": "http",
       "url": "https://mcp.datadoghq.com/api/unstable/mcp-server/mcp"
     },
+    "dovetail": {
+      "type": "http",
+      "url": "https://dovetail.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer <your-dovetail-personal-api-key>"
+      }
+    },
     "figma": {
       "type": "http",
       "url": "https://mcp.figma.com/mcp"

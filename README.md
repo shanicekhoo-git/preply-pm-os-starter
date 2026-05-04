@@ -6,7 +6,7 @@ There are **three different methods** Claude Code uses to talk to external servi
 
 | Method                      | What it is                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Tools that use it                                                       |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| **`mcp.json`**              | A config file that lists MCP servers. Claude Code reads it on startup and connects directly to each. Think of it as a phonebook of which APIs to call.                                                                                                                                                                                                                                                                                                                       | Atlassian (Jira/Confluence), Amplitude, Datadog, Figma, Granola, Gosset |
+| **`mcp.json`**              | A config file that lists MCP servers. Claude Code reads it on startup and connects directly to each. Think of it as a phonebook of which APIs to call.                                                                                                                                                                                                                                                                                                                       | Atlassian (Jira/Confluence), Amplitude, Datadog, Dovetail, Figma, Granola, Gosset |
 | **claude.ai MCP connector** | Managed connections you set up via your claude.ai account. Anthropic handles the auth, and Claude Code picks them up automatically. More reliable when the local OAuth flow is flaky.                                                                                                                                                                                                                                                                                        | Slack                                                                   |
 | **CLI tools**               | Command-line tools (like `gh`, `gws`, `snow`) installed on your machine. Claude runs them the same way an engineer would — write a command, run it, read the result. **TL;DR — why CLI beats MCP here:** an MCP dumps the whole response into Claude's context (slow, expensive, can hit the limit on big SQL results); a CLI lets Claude write a query/command, save the output to a file, and read back only what it needs. Faster, cheaper, more reliable on big results. | Snowflake, Google Workspace, GitHub                                     |
 
@@ -23,7 +23,7 @@ Time required: **~30 minutes**. You'll do most of this by asking Claude to set t
 
 Paste this prompt into Claude Code:
 
-> Look at this repo: https://github.com/shanicekhoo-git/preply-pm-os-starter — read the `mcp.json` file in it and add those servers to my `~/.claude.json` config file. Don't overwrite any servers I already have — only add the new ones. Then walk me through authenticating each one.
+> Look at this repo: https://github.com/shanicekhoo-git/preply-pm-os-starter — read the `mcp.json` file in it and add those servers to my `~/.claude.json` config file. Don't overwrite any servers I already have — only add the new ones. Then walk me through authenticating each one. Most use OAuth — Dovetail is the exception, it needs a personal API key that I'll generate and paste.
 
 Follow Claude's instructions. It might take some back and forth — that's part of the fun of working with AI :)
 
@@ -31,6 +31,7 @@ Follow Claude's instructions. It might take some back and forth — that's part 
 - `atlassian` — Jira + Confluence (OAuth)
 - `amplitude` — analytics + experiments (OAuth)
 - `datadog` — logs, metrics, dashboards (OAuth)
+- `dovetail` — research repository, insights, transcripts (personal API key)
 - `figma` — designs, screenshots, metadata (OAuth)
 - `granola` — meeting transcripts and summaries (OAuth)
 - `gosset` — experiment data (VPN required, no OAuth)
@@ -38,6 +39,19 @@ Follow Claude's instructions. It might take some back and forth — that's part 
 ### A few setup notes Claude will (probably) walk you through
 
 **Gosset.** Connect to Preply VPN first — this MCP only resolves on the internal network. First use prompts for browser auth.
+
+**Dovetail.** No OAuth — you generate a personal API key in Dovetail and paste it into `mcp.json`. Steps:
+
+1. Go to [dovetail.com](https://dovetail.com) and click your avatar → **Settings**.
+2. In the left sidebar under **Profile**, click **Account**.
+3. Scroll to the **Personal API keys** section at the bottom.
+4. Click **Create key** (top right of that section).
+
+   ![Dovetail Personal API keys section with Create key button highlighted](images/dovetail-api-key.png)
+
+5. Name it something like `claude`, set an expiry (e.g. 2 years), and click **Create**.
+6. **Copy the token immediately** — Dovetail only shows it once. It looks like `api.1f7iljs...`.
+7. Open `~/.claude.json`, find the `dovetail` entry under `mcpServers`, and replace `<your-dovetail-personal-api-key>` with your token. Or just ask Claude: *"add my Dovetail token to mcp.json — it's `api.xxx`"*.
 
 ### Verify it worked — and what `~/.claude.json` actually is
 
@@ -49,13 +63,14 @@ Once Claude finishes, open `~/.claude.json` in your editor or Finder to confirm 
 
 
 
-Inside, look for an `mcpServers` block with these six entries:
+Inside, look for an `mcpServers` block with these seven entries:
 
 ```json
 "mcpServers": {
   "amplitude": { ... },
   "atlassian": { ... },
   "datadog": { ... },
+  "dovetail": { ... },
   "figma": { ... },
   "gosset": { ... },
   "granola": { ... }
